@@ -363,7 +363,7 @@ class EnvironmentCanadaWeatherCard extends HTMLElement {
           <div class="current-temp">
             ${Math.round(temperature)}<span class="unit">${temperatureUnit}</span>
           </div>
-          <div class="current-condition">${condition}</div>
+          <div class="current-condition">${this._toTitleCase(condition)}</div>
         </div>
       </div>
     `;
@@ -510,6 +510,10 @@ class EnvironmentCanadaWeatherCard extends HTMLElement {
 
     const icon = iconMap[condition] || "mdi:weather-partly-cloudy";
     return `<ha-icon icon="${icon}"></ha-icon>`;
+  }
+
+  _toTitleCase(str) {
+    return str.replace(/\S+/g, word => word.charAt(0).toUpperCase() + word.slice(1).toLowerCase());
   }
 
   getCardSize() {
