@@ -1,0 +1,157 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- (c) ammap.com | SVG weather icons -->
+<!-- Tornado | Contributed by hsoJ95 on GitHub: https://github.com/hsoj95 -->
+<svg width="56" height="48" version="1.1" xmlns="http://www.w3.org/2000/svg">
+    <defs>
+        <filter id="blur" x="-.16995" y="-.17864" width="1.3289" height="1.455">
+            <feGaussianBlur in="SourceAlpha" stdDeviation="3" />
+            <feOffset dx="0" dy="4" result="offsetblur" />
+            <feComponentTransfer>
+                <feFuncA slope="0.05" type="linear" />
+            </feComponentTransfer>
+            <feMerge>
+                <feMergeNode />
+                <feMergeNode in="SourceGraphic" />
+            </feMerge>
+        </filter>
+        <style type="text/css">
+            <![CDATA[
+
+            /*
+            ** Tornado
+            */
+
+            @keyframes tornado {
+                0% {
+                    -webkit-transform: translate(-5px, 30px) scale(1.0);
+                    -moz-transform: translate(-5px, 30px) scale(1.0);
+                    -ms-transform: translate(-5px, 30px) scale(1.0);
+                    transform: translate(-5px, 30px) scale(1.0);
+                }
+
+                33% {
+                    -webkit-transform: translate(-4px, 30px) scale(1.1);
+                    -moz-transform: translate(-4px, 30px) scale(1.1);
+                    -ms-transform: translate(-4px, 30px) scale(1.1);
+                    transform: translate(-4px, 30px) scale(1.1);
+                }
+
+                66% {
+                    -webkit-transform: translate(-6px, 30px) scale(1.1);
+                    -moz-transform: translate(-6px, 30px) scale(1.1);
+                    -ms-transform: translate(-6px, 30px) scale(1.1);
+                    transform: translate(-6px, 30px) scale(1.1);
+                }
+
+                100% {
+                    -webkit-transform: translate(-5px, 30px) scale(1.0);
+                    -moz-transform: translate(-5px, 30px) scale(1.0);
+                    -ms-transform: translate(-5px, 30px) scale(1.0);
+                    transform: translate(-5px, 30px) scale(1.0);
+                }
+            }
+
+            #tornado {
+                -webkit-animation-name: tornado;
+                -moz-animation-name: tornado;
+                animation-name: tornado;
+                -webkit-animation-duration: 3s;
+                -moz-animation-duration: 3s;
+                animation-duration: 3s;
+                -webkit-animation-timing-function: linear;
+                -moz-animation-timing-function: linear;
+                animation-timing-function: linear;
+                -webkit-animation-iteration-count: infinite;
+                -moz-animation-iteration-count: infinite;
+                animation-iteration-count: infinite;
+            }       
+
+            @keyframes flutter1 {
+                0%   { transform: rotate(0deg); }
+                25%  { transform: rotate(4deg); }
+                50%  { transform: rotate(-2deg); }
+                75%  { transform: rotate(3deg); }
+                100% { transform: rotate(0deg); }
+            }
+
+                @keyframes flutter2 {
+                0%   { transform: rotate(0deg); }
+                25%  { transform: rotate(3deg); }
+                50%  { transform: rotate(-4deg); }
+                75%  { transform: rotate(2deg); }
+                100% { transform: rotate(0deg); }
+            }
+
+                @keyframes flutter3 {
+                0%   { transform: rotate(0deg); }
+                25%  { transform: rotate(-3deg); }
+                50%  { transform: rotate(2deg); }
+                75%  { transform: rotate(-4deg); }
+                100% { transform: rotate(0deg); }
+            }
+
+            .blade {
+                stroke: #3fa34d;
+                stroke-width: 1.5;
+                stroke-linecap: round;
+                fill: none;
+                transform-origin: 0 0;
+                -webkit-animation-timing-function: ease-in-out;
+                -moz-animation-timing-function: ease-in-out;
+                animation-timing-function: ease-in-out;
+                -webkit-animation-iteration-count: infinite;
+                -moz-animation-iteration-count: infinite;
+                animation-iteration-count: infinite;
+            }
+
+            .blade1 { 
+                -webkit-animation-name: flutter1;
+                -moz-animation-name: flutter1;
+                animation-name: flutter1;             
+                -webkit-animation-duration: 3s;
+                -moz-animation-duration: 3s;
+                animation-duration: 3s; 
+            }
+            .blade2 { 
+                -webkit-animation-name: flutter2;
+                -moz-animation-name: flutter2;
+                animation-name: flutter2;          
+                -webkit-animation-duration: 3.2s;
+                -moz-animation-duration: 3.2s;
+                animation-duration: 3.2s;
+            }
+            .blade3 { 
+                -webkit-animation-name: flutter3;
+                -moz-animation-name: flutter3;
+                animation-name: flutter3;          
+                animation: flutter3 2.8s; 
+                -webkit-animation-duration: 2.8s;
+                -moz-animation-duration: 2.8s;
+                animation-duration: 2.8s;
+            }
+        ]]>
+        </style>
+    </defs>
+    <g transform="translate(-3.9995 -8)" filter="url(#blur)">
+        <g transform="translate(16,50)">
+            <path d="M 0 0 C -1 -6 -1.75 -4 -3 -6" class="blade blade1"/>
+            <path d="M 0 0 C  0.25 -3  0.5 -5  0 -8" class="blade blade2"/>
+            <path d="M 0 0 C  1 -2.5  2 -6  3 -8" class="blade blade3"/>
+        </g>
+        <g id="tornado" fill="#1d1d1d" stroke="#fff"
+            style="-moz-animation-duration:3s;-moz-animation-iteration-count:infinite;-moz-animation-name:tornado;-moz-animation-timing-function:linear;-webkit-animation-duration:3s;-webkit-animation-iteration-count:infinite;-webkit-animation-name:tornado;-webkit-animation-timing-function:linear">
+            <path id="Polygon" transform="translate(20,-15) scale(1.75, 1.75)"
+                d="m9.239 0h2.1597c1.403 0 2.7694 0.44812 3.9 1.279l0.07492 0.055065c0.84792 0.62321 1.0301 1.8158 0.40688 2.6637-0.06273 0.085346-0.13246 0.16531-0.20848 0.23907l-2.8266 2.7425c-1.0913 1.0589-1.8597 2.4058-2.2157 3.8841-0.35503 1.4743-1.1473 2.8068-2.2729 3.823l-3.1203 2.8168-1.9597 1.3737c-0.85678 0.60058-2.0382 0.3929-2.6388-0.46388-0.5411-0.77192-0.43235-1.8242 0.25517-2.4692l1.0781-0.9966c1.2556-1.1607 1.9695-2.793 1.9695-4.5029 0-1.7724-0.33249-3.529-0.98022-5.1788l-1.5105-3.8473c-0.20966-0.53401 0.053275-1.1369 0.58729-1.3465 0.12094-0.047481 0.24971-0.071854 0.37963-0.071854h6.922z" />
+        </g>
+        <g transform="translate(26,50)">
+            <path d="M 0 0 C -1 -6 -1.5 -4 -2 -6" class="blade blade3"/>
+            <path d="M 0 0 C  0.25 -3  0.5 -5  0 -8" class="blade blade2"/>
+            <path d="M 0 0 C  1 -2.5  2 -6  3 -7" class="blade blade1"/>
+        </g>
+        <g transform="translate(42,50)">
+            <path d="M 0 0 C -1 -6 -1.5 -4 -2 -6" class="blade blade2"/>
+            <path d="M 0 0 C  0.25 -3  0.5 -5  0 -8" class="blade blade3"/>
+            <path d="M 0 0 C  1 -2.5  2 -4  3 -6" class="blade blade1"/>
+        </g>
+    </g>
+</svg>
