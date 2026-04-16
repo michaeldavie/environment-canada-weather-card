@@ -463,7 +463,7 @@ class EnvironmentCanadaWeatherCard extends HTMLElement {
             <div class="icon">
               ${this._getWeatherIcon(forecastCondition)}
             </div>
-            ${day.temperature !== undefined ? `<div class="temp-high">${Math.round(day.temperature)}°</div>` : ""}
+            <div class="temp-high">${day.temperature != null ? `${Math.round(day.temperature)}°` : "—"}</div>
             <div class="temp-low">${day.templow != null ? `${Math.round(day.templow)}°` : "—"}</div>
           </div>
         `;
