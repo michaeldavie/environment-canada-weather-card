@@ -659,7 +659,7 @@ window.customCards.push({
 });
 
 console.info(
-  "%c ENVIRONMENT-CANADA-WEATHER-CARD %c v1.4.0 ",
+  "%c ENVIRONMENT-CANADA-WEATHER-CARD %c v1.7.0 ",
   "color: white; background: #3498db; font-weight: bold;",
   "color: #3498db; background: white; font-weight: bold;"
 );
