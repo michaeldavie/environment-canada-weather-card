@@ -70,7 +70,7 @@ class EnvironmentCanadaWeatherCard extends HTMLElement {
   static getStubConfig() {
     return {
       weather_entity: "weather.ottawa_kanata_orleans_forecast",
-      condition_sensor: "sensor.ottawa_kanata_orleans_condition",
+      condition_sensor: "sensor.ottawa_kanata_orleans_current_condition",
       icon_code_sensor: "sensor.ottawa_kanata_orleans_icon_code",
       wind_chill_sensor: "sensor.ottawa_kanata_orleans_wind_chill",
       humidex_sensor: "sensor.ottawa_kanata_orleans_humidex",
