@@ -67,18 +67,10 @@ class EnvironmentCanadaWeatherCard extends HTMLElement {
     return document.createElement("environment-canada-weather-card-editor");
   }
 
-  static getStubConfig() {
-    return {
-      weather_entity: "weather.ottawa_kanata_orleans_forecast",
-      condition_sensor: "sensor.ottawa_kanata_orleans_current_condition",
-      icon_code_sensor: "sensor.ottawa_kanata_orleans_icon_code",
-      wind_chill_sensor: "sensor.ottawa_kanata_orleans_wind_chill",
-      humidex_sensor: "sensor.ottawa_kanata_orleans_humidex",
-      icon_path: "/hacsfiles/environment-canada-weather-card/weather-icons/EnvironmentCanada",
-      icon_extension: "svg",
-      name: "Weather",
-      alerts_sensor: "sensor.ottawa_kanata_orleans_alerts"
-    };
+  static getStubConfig(hass) {
+    const weatherEntities = hass ? Object.keys(hass.states).filter(e => e.startsWith("weather.")) : [];
+    const entity = weatherEntities.find(e => e.includes("forecast")) || weatherEntities[0] || "weather.home_forecast";
+    return { weather_entity: entity };
   }
 
   constructor() {
@@ -111,12 +103,6 @@ class EnvironmentCanadaWeatherCard extends HTMLElement {
     if (!config.weather_entity) {
       throw new Error("You must specify a weather_entity");
     }
-    if (!config.condition_sensor) {
-      throw new Error("You must specify a condition_sensor");
-    }
-    if (!config.icon_code_sensor) {
-      throw new Error("You must specify an icon_code_sensor");
-    }
 
     // Unsubscribe from old forecast if config changes
     if (this._forecastSubscription) {
@@ -124,12 +110,17 @@ class EnvironmentCanadaWeatherCard extends HTMLElement {
       this._forecastSubscription = null;
     }
 
+    const station = _stationFromWeatherEntity(config.weather_entity);
+
     this._config = {
-      icon_path: "/hacsfiles/environment-canada-weather-card/weather-icons/EnvironmentCanada",
-      icon_extension: "svg",
       show_forecast: true,
       forecast_type: "daily",
       name: "",
+      condition_sensor: `sensor.${station}_current_condition`,
+      icon_code_sensor: `sensor.${station}_icon_code`,
+      wind_chill_sensor: `sensor.${station}_wind_chill`,
+      humidex_sensor: `sensor.${station}_humidex`,
+      alerts_sensor: `sensor.${station}_alerts`,
       ...config
     };
 
@@ -366,7 +357,7 @@ class EnvironmentCanadaWeatherCard extends HTMLElement {
     let iconUrl = "";
     if (iconCode && iconCode !== "unknown" && iconCode !== "unavailable") {
       const paddedCode = iconCode.toString().padStart(2, "0");
-      iconUrl = EC_ICONS[paddedCode] || `${this._config.icon_path}/${paddedCode}.${this._config.icon_extension}`;
+      iconUrl = EC_ICONS[paddedCode] || `/hacsfiles/environment-canada-weather-card/weather-icons/EnvironmentCanada/${paddedCode}.svg`;
     }
 
     // Use subscribed forecast, fallback to attribute (older HA)
@@ -595,6 +586,66 @@ class EnvironmentCanadaWeatherCard extends HTMLElement {
   }
 }
 
+// Derives the EC station name from a weather entity ID.
+// e.g. "weather.ottawa_kanata_orleans_forecast" → "ottawa_kanata_orleans"
+function _stationFromWeatherEntity(entityId) {
+  return entityId.replace(/^weather\./, "").replace(/_forecast$/, "");
+}
+
+// Visual editor shown in the Lovelace UI card picker / edit dialog
+class EnvironmentCanadaWeatherCardEditor extends HTMLElement {
+  constructor() {
+    super();
+    this._config = {};
+    this._hass = null;
+  }
+
+  set hass(hass) {
+    this._hass = hass;
+    const form = this.shadowRoot && this.shadowRoot.querySelector("ha-form");
+    if (form) form.hass = hass;
+  }
+
+  setConfig(config) {
+    this._config = { ...config };
+    const form = this.shadowRoot && this.shadowRoot.querySelector("ha-form");
+    if (form) form.data = this._config;
+  }
+
+  connectedCallback() {
+    if (!this.shadowRoot) {
+      this.attachShadow({ mode: "open" });
+    }
+
+    let form = this.shadowRoot.querySelector("ha-form");
+    if (!form) {
+      form = document.createElement("ha-form");
+      form.schema = [
+        {
+          name: "weather_entity",
+          required: true,
+          selector: { entity: { domain: "weather" } }
+        }
+      ];
+      form.computeLabel = () => "Weather Entity";
+      form.addEventListener("value-changed", (e) => {
+        this._config = e.detail.value;
+        this.dispatchEvent(new CustomEvent("config-changed", {
+          detail: { config: this._config },
+          bubbles: true,
+          composed: true
+        }));
+      });
+      this.shadowRoot.appendChild(form);
+    }
+
+    form.data = this._config;
+    if (this._hass) form.hass = this._hass;
+  }
+}
+
+customElements.define("environment-canada-weather-card-editor", EnvironmentCanadaWeatherCardEditor);
+
 // Register the custom card
 customElements.define("environment-canada-weather-card", EnvironmentCanadaWeatherCard);
 
@@ -608,7 +659,7 @@ window.customCards.push({
 });
 
 console.info(
-  "%c ENVIRONMENT-CANADA-WEATHER-CARD %c v1.3.1 ",
+  "%c ENVIRONMENT-CANADA-WEATHER-CARD %c v1.4.0 ",
   "color: white; background: #3498db; font-weight: bold;",
   "color: #3498db; background: white; font-weight: bold;"
 );
