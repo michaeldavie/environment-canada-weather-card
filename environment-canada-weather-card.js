@@ -203,10 +203,15 @@ class EnvironmentCanadaWeatherCard extends HTMLElement {
           box-sizing: border-box;
         }
         .header {
-          display: flex;
-          align-items: center;
-          justify-content: space-between;
           margin-bottom: 16px;
+        }
+        .alerts-container {
+          display: flex;
+          flex-direction: column;
+          gap: 4px;
+          align-items: flex-end;
+          margin-left: auto;
+          flex-shrink: 0;
         }
         .name {
           font-size: 1.1em;
@@ -235,7 +240,7 @@ class EnvironmentCanadaWeatherCard extends HTMLElement {
         }
         .current {
           display: flex;
-          align-items: center;
+          align-items: flex-start;
           gap: 16px;
           margin-bottom: 16px;
         }
@@ -372,22 +377,13 @@ class EnvironmentCanadaWeatherCard extends HTMLElement {
     // Build the card HTML
     let html = "";
 
-    // Header: name + alert
-    const alert = this._getAlert();
-    if (this._config.name || alert) {
-      html += `
-        <div class="header">
-          <div class="name">${this._config.name || ""}</div>
-          ${alert ? `
-            <div class="alert">
-              <div class="alert-text">${alert.text}</div>
-              <div class="alert-icon"><img src="${alert.icon}" alt="${alert.text}"></div>
-            </div>` : ""}
-        </div>
-      `;
+    // Header: name only
+    if (this._config.name) {
+      html += `<div class="header"><div class="name">${this._config.name}</div></div>`;
     }
 
-    // Current conditions
+    // Current conditions + alerts side by side
+    const alerts = this._getAlerts();
     html += `
       <div class="current">
         <div class="current-icon">
@@ -399,6 +395,14 @@ class EnvironmentCanadaWeatherCard extends HTMLElement {
           </div>
           <div class="current-condition">${this._toTitleCase(condition)}</div>
         </div>
+        ${alerts.length > 0 ? `
+          <div class="alerts-container">
+            ${alerts.map(a => `
+              <div class="alert">
+                <div class="alert-text">${a.text}</div>
+                <div class="alert-icon"><img src="${a.icon}" alt="${a.text}"></div>
+              </div>`).join("")}
+          </div>` : ""}
       </div>
     `;
 
@@ -546,36 +550,40 @@ class EnvironmentCanadaWeatherCard extends HTMLElement {
     return `<ha-icon icon="${icon}"></ha-icon>`;
   }
 
-  _getAlert() {
-    if (!this._config.alerts_sensor) return null;
+  _getAlerts() {
+    if (!this._config.alerts_sensor) return [];
     const sensor = this._hass && this._hass.states[this._config.alerts_sensor];
-    if (!sensor || sensor.state === "0" || sensor.state === "unavailable" || sensor.state === "unknown") return null;
+    if (!sensor || sensor.state === "0" || sensor.state === "unavailable" || sensor.state === "unknown") return [];
 
-    const alerts = sensor.attributes.alerts || [];
+    const rawAlerts = sensor.attributes.alerts || [];
     // Priority order: warning > watch > advisory > statement
     const priority = ["warning", "watch", "advisory", "statement"];
-    let topAlert = null;
+
+    // Collect all alerts sorted by priority, take top 2
+    const sorted = [];
     for (const type of priority) {
-      topAlert = alerts.find(a => a.type === type);
-      if (topAlert) break;
-    }
-    if (!topAlert) return null;
-
-    const iconKey = topAlert.color || "statement";
-    const icon = ALERT_ICONS[iconKey] || ALERT_ICONS["statement"];
-    if (!icon) return null;
-
-    let text;
-    if (topAlert.type === "statement") {
-      text = topAlert.title || "Special Weather Statement";
-    } else {
-      const colour = topAlert.color ? this._toTitleCase(topAlert.color) : "";
-      const type = this._toTitleCase(topAlert.type);
-      const subject = (topAlert.title || "").replace(new RegExp(topAlert.type, "i"), "").trim();
-      text = [colour, type, subject ? `- ${subject}` : ""].filter(Boolean).join(" ");
+      for (const a of rawAlerts) {
+        if (a.type === type) sorted.push(a);
+      }
     }
 
-    return { icon, text };
+    return sorted.slice(0, 2).map(alert => {
+      const iconKey = alert.color || "statement";
+      const icon = ALERT_ICONS[iconKey] || ALERT_ICONS["statement"];
+      if (!icon) return null;
+
+      let text;
+      if (alert.type === "statement") {
+        text = alert.title || "Special Weather Statement";
+      } else {
+        const colour = alert.color ? this._toTitleCase(alert.color) : "";
+        const type = this._toTitleCase(alert.type);
+        const subject = (alert.title || "").replace(new RegExp(alert.type, "i"), "").trim();
+        text = [colour, type, subject ? `- ${subject}` : ""].filter(Boolean).join(" ");
+      }
+
+      return { icon, text };
+    }).filter(Boolean);
   }
 
   _toTitleCase(str) {
@@ -600,7 +608,7 @@ window.customCards.push({
 });
 
 console.info(
-  "%c ENVIRONMENT-CANADA-WEATHER-CARD %c v1.3.0 ",
+  "%c ENVIRONMENT-CANADA-WEATHER-CARD %c v1.3.1 ",
   "color: white; background: #3498db; font-weight: bold;",
   "color: #3498db; background: white; font-weight: bold;"
 );
