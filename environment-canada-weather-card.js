@@ -350,7 +350,9 @@ class EnvironmentCanadaWeatherCard extends HTMLElement {
 
     const temperature = weather.attributes.temperature;
     const temperatureUnit = weather.attributes.temperature_unit || "°C";
-    const condition = conditionSensor ? conditionSensor.state : weather.state;
+    const condition = (conditionSensor && conditionSensor.state !== "unavailable" && conditionSensor.state !== "unknown")
+      ? conditionSensor.state
+      : "";
     const iconCode = iconCodeSensor ? iconCodeSensor.state : null;
 
     // Resolve icon from bundled EC icon set, with fallback to icon_path config
@@ -659,7 +661,7 @@ window.customCards.push({
 });
 
 console.info(
-  "%c ENVIRONMENT-CANADA-WEATHER-CARD %c v1.7.0 ",
+  "%c ENVIRONMENT-CANADA-WEATHER-CARD %c v1.7.1",
   "color: white; background: #3498db; font-weight: bold;",
   "color: #3498db; background: white; font-weight: bold;"
 );
