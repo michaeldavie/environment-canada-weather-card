@@ -336,7 +336,8 @@ class EnvironmentCanadaWeatherCard extends HTMLElement {
     }
 
     const weather = this._hass.states[this._config.weather_entity];
-    const conditionSensor = this._hass.states[this._config.condition_sensor];
+    const conditionSensor = this._hass.states[this._config.condition_sensor]
+      || this._hass.states[this._config.condition_sensor.replace("_current_condition", "_condition")];
     const iconCodeSensor = this._hass.states[this._config.icon_code_sensor];
 
     if (!weather) {
@@ -661,7 +662,7 @@ window.customCards.push({
 });
 
 console.info(
-  "%c ENVIRONMENT-CANADA-WEATHER-CARD %c v1.7.1",
+  "%c ENVIRONMENT-CANADA-WEATHER-CARD %c v1.7.2",
   "color: white; background: #3498db; font-weight: bold;",
   "color: #3498db; background: white; font-weight: bold;"
 );
