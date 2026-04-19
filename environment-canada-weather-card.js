@@ -202,7 +202,7 @@ class EnvironmentCanadaWeatherCard extends HTMLElement {
           gap: 4px;
           align-items: flex-end;
           margin-left: auto;
-          flex-shrink: 0;
+          min-width: 0;
         }
         .name {
           font-size: 1.1em;
@@ -213,12 +213,14 @@ class EnvironmentCanadaWeatherCard extends HTMLElement {
           display: flex;
           align-items: center;
           gap: 6px;
-          flex-shrink: 0;
+          min-width: 0;
         }
         .alert-text {
           font-size: 1.1em;
           color: var(--secondary-text-color);
           text-align: right;
+          min-width: 0;
+          overflow-wrap: break-word;
         }
         .alert-icon {
           width: 28px;
